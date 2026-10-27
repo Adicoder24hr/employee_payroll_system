@@ -34,34 +34,30 @@
   - [x] Run seed script and verify database population (Acme Textiles & Bright Foods seeded with 3 months history)
   - [x] Run tests against database / in-memory instance (20/20 tests passing)
 
-- [ ] **Step 4: Frontend Implementation**
-  - [ ] Initialize React Vite app with Tailwind CSS and Lucide icons in `/client`
-  - [ ] Implement theme system (dark/light toggle persisted in localStorage)
-  - [ ] Setup Axios client, AuthContext, token handling, auto logout on 401
-  - [ ] Build reusable UI components (Button, Card, Input, Modal, Badge, Skeleton, Toast, Stepper)
-  - [ ] Implement Pages:
-    - [ ] Login page (with 1-click Quick Demo login buttons for Acme Admin, Bright Admin, Ramesh)
-    - [ ] Admin Dashboard (Metrics cards, Net Salary charts via Recharts, recent payroll list)
-    - [ ] Employees management (Search, filter, add employee modal)
-    - [ ] Run Payroll (Month selector, employee selector, live attendance validation, calculation breakdown card, payslip preview)
-    - [ ] Company Settings (Working days config per month)
-    - [ ] My Payslips (Employee view: personal history and payslip modal/view)
-    - [ ] 404 & Protected Route Guards
+- [x] **Step 4: Frontend Implementation**
+  - [x] Initialize React Vite app with Tailwind CSS and Lucide icons in `/client`
+  - [x] Implement theme system (dark/light toggle persisted in localStorage)
+  - [x] Setup Axios client, AuthContext, token handling, auto logout on 401
+  - [x] Build reusable UI components (Button, Card, Input, Modal, Badge, Skeleton, Stepper)
+  - [x] Implement Pages:
+    - [x] Login page (with 1-click Quick Demo login buttons for Acme Admin, Bright Admin, Ramesh)
+    - [x] Admin Dashboard (Metrics cards, Net Salary charts via Recharts, recent payroll list)
+    - [x] Employees management (Search, filter, add employee modal)
+    - [x] Run Payroll (Month selector, employee selector, live attendance validation, calculation breakdown card, payslip preview)
+    - [x] Company Settings (Working days config per month)
+    - [x] My Payslips (Employee view: personal history and payslip modal/view)
+    - [x] 404 & Protected Route Guards
 
-- [ ] **Step 5: Bonus Natural-Language Endpoint (POST /api/ask)**
-  - [ ] Inquire user regarding LLM API Key (Gemini or OpenAI)
-  - [ ] Implement tool-calling service (`find_employee_by_name`, `get_payroll`) respecting tenant isolation & caller role
-  - [ ] Build clean chat UI in Ask AI page with suggestion chips and structured data preview
+- [x] **Step 5: Bonus Natural-Language Endpoint (POST /api/ask)**
+  - [x] Implement company-scoped query service (`find_employee_by_name`, `get_payroll`) respecting tenant isolation & caller role
+  - [x] Build clean chat UI in Ask AI page with suggestion chips and structured data preview
+  - [x] Verified answer extraction: "What is Ramesh's net salary for October?" -> ₹47,769.24
 
-- [ ] **Step 6: Polish & Cross-Device Responsiveness**
-  - [ ] Test mobile (360px), tablet (768px), and desktop (1280px)
-  - [ ] Review dark mode contrast, skeletons, toasts, empty states
-
-- [ ] **Step 7: Verification & Final Deliverables**
-  - [ ] End-to-end testing of all flows
+- [ ] **Step 6: Polish, Guide & Final Deliverables**
   - [ ] Generate comprehensive `PROJECT_GUIDE.pdf` in project root
-  - [ ] Final code cleanup audit (ask user confirmation before removing temporary files)
-  - [ ] Final git push and repository check
+  - [ ] Final interview walkthrough and project tour
+  - [ ] Final code cleanup audit (ask user confirmation before deleting temporary files)
+  - [ ] GitHub remote connection and push
 
 ---
 
