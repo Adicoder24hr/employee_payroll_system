@@ -61,14 +61,20 @@ The client runs at `http://localhost:5173` and the API runs at `http://localhost
 
 ## Demo accounts
 
-All seeded accounts use the password `Password123!`.
+Default password for all seeded accounts: `Password123!`.
 
 | Company | Role | Email |
 |---|---|---|
 | Acme Textiles | Admin | `admin@acme.com` |
 | Acme Textiles | Employee | `ramesh@acme.com` |
+| Acme Textiles | Employee | `priya@acme.com` |
+| Acme Textiles | Employee | `amit@acme.com` |
+| Acme Textiles | Employee | `sunita@acme.com` |
 | Bright Foods | Admin | `admin@bright.com` |
 | Bright Foods | Employee | `ramesh@bright.com` |
+| Bright Foods | Employee | `neha@bright.com` |
+| Bright Foods | Employee | `vikram@bright.com` |
+| Bright Foods | Employee | `pooja@bright.com` |
 
 The login page also has demo login buttons.
 

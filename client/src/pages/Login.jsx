@@ -179,11 +179,6 @@ export default function Login() {
             </Button>
           </form>
 
-          <div className="pt-4 border-t border-slate-200 dark:border-slate-800 text-center">
-            <p className="text-xs text-slate-400 dark:text-slate-500">
-              Default password for all seeded accounts: <code className="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-mono">Password123!</code>
-            </p>
-          </div>
         </div>
       </div>
     </div>
