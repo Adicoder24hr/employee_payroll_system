@@ -78,7 +78,40 @@ Default password for all seeded accounts: `Password123!`.
 
 The login page also has demo login buttons.
 
+## Screenshots
+
+### Login
+
+![Login page](design/login_screen.png)
+
+### Dashboard
+
+![Dashboard overview](design/dashboard-1.png)
+
+![Recent payroll](design/dashboard-2.png)
+
+### Employees
+
+![Employee list](design/employees.png)
+
+![Add employee form](design/add_Employee_form.png)
+
+### Payroll
+
+![Run payroll form](design/run_payroll.png)
+
+![Payroll result](design/run_payroll_2.png)
+
+### Company settings
+
+![Company settings](design/company_settings.png)
+
+### Ask AI
+
+![Ask AI page](design/ask_ai.png)
+
+![Ask AI payroll answer](design/ask_ai_2.png)
+
 ## Project docs
 
 - [API.md](API.md): API routes and response examples
-- [DESIGN.md](DESIGN.md): Data model, security, and payroll details
