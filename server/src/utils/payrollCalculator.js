@@ -1,50 +1,12 @@
-/**
- * Pure payroll calculation engine.
- * Free of database or external dependencies for deterministic, testable results.
- */
-
-/**
- * Rounds a financial number to 2 decimal places.
- * @param {number} value
- * @returns {number}
- */
 function roundMoney(value) {
+  // Round each currency value before it is used in the next calculation.
   return Math.round((value + Number.EPSILON) * 100) / 100;
 }
-
-/**
- * Validates ISO Month string format YYYY-MM.
- * @param {string} month
- * @returns {boolean}
- */
 function isValidMonth(month) {
   if (typeof month !== 'string') return false;
   const regex = /^\d{4}-(0[1-9]|1[0-2])$/;
   return regex.test(month);
 }
-
-/**
- * Calculates monthly payroll from employee monthly salary, working days, and attendance counts.
- *
- * Rules:
- * - lopDays = absentDays + (0.5 * halfDays)
- * - perDaySalary = monthlySalary / workingDays
- * - lopAmount = perDaySalary * lopDays
- * - grossSalary = monthlySalary - lopAmount
- * - deduction = grossSalary * (deductionPercentage / 100)
- * - netSalary = grossSalary - deduction
- * - Unmarked days (workingDays - (present + absent + halfDay)) count as absent days.
- *
- * @param {Object} params
- * @param {number} params.monthlySalary - Base gross monthly salary (CTC)
- * @param {number} params.workingDays - Total working days in that month (must be > 0)
- * @param {number} [params.presentDays=0] - Number of days present
- * @param {number} [params.absentDays=0] - Explicit absent days
- * @param {number} [params.halfDays=0] - Number of half days
- * @param {number} [params.deductionPercentage=10] - Flat deduction percentage (e.g. 10 for 10%)
- * @param {string} [params.month] - Month in YYYY-MM format (for validation)
- * @returns {Object} Calculated payroll breakdown
- */
 function calculatePayroll({
   monthlySalary,
   workingDays,
@@ -54,12 +16,10 @@ function calculatePayroll({
   deductionPercentage = 10,
   month = null,
 }) {
-  // Validate month if provided
   if (month !== null && !isValidMonth(month)) {
     throw new Error('Invalid month format. Expected YYYY-MM (e.g., 2026-10).');
   }
 
-  // Validate numeric types
   if (typeof monthlySalary !== 'number' || isNaN(monthlySalary) || monthlySalary < 0) {
     throw new Error('Monthly salary must be a non-negative number.');
   }
@@ -75,7 +35,6 @@ function calculatePayroll({
     ? deductionPercentage
     : 10;
 
-  // Validate negative values
   if (pDays < 0 || aDays < 0 || hDays < 0) {
     throw new Error('Attendance day counts cannot be negative.');
   }
@@ -86,7 +45,6 @@ function calculatePayroll({
 
   const totalMarkedDays = pDays + aDays + hDays;
 
-  // Cannot mark more days than exist in company working days for that month
   if (totalMarkedDays > workingDays) {
     throw new Error(
       `Total attendance days (${totalMarkedDays}) cannot exceed company working days (${workingDays}).`
@@ -97,23 +55,20 @@ function calculatePayroll({
   const unmarkedDays = workingDays - totalMarkedDays;
   const effectiveAbsentDays = aDays + unmarkedDays;
 
-  // Loss of Pay (LOP) days calculation
+  // Each half-day counts as half a day of loss of pay.
   const lopDays = roundMoney(effectiveAbsentDays + (0.5 * hDays));
 
-  // Rate per day
+  // Round the daily rate before calculating the loss-of-pay amount.
   const perDaySalary = roundMoney(monthlySalary / workingDays);
 
-  // LOP amount: capped at monthlySalary so gross does not become negative
   const rawLopAmount = perDaySalary * lopDays;
   const lopAmount = roundMoney(Math.min(monthlySalary, rawLopAmount));
 
-  // Earned gross salary
   const grossSalary = roundMoney(Math.max(0, monthlySalary - lopAmount));
 
-  // Deductions (PF/tax)
+  // Apply the configured deduction percentage to gross pay after LOP.
   const deduction = roundMoney(grossSalary * (dedPercent / 100));
 
-  // Disbursable net salary
   const netSalary = roundMoney(Math.max(0, grossSalary - deduction));
 
   return {

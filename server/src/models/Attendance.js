@@ -44,7 +44,6 @@ const attendanceSchema = new mongoose.Schema(
       default: 0,
       min: 0,
     },
-    // Computed payroll fields stored with record
     lopDays: {
       type: Number,
       required: true,
@@ -88,7 +87,6 @@ const attendanceSchema = new mongoose.Schema(
   }
 );
 
-// One payroll record per employee per month within a company
 attendanceSchema.index({ companyId: 1, employeeId: 1, month: 1 }, { unique: true });
 
 const Attendance = mongoose.model('Attendance', attendanceSchema);

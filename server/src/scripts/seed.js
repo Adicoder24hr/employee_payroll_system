@@ -18,7 +18,6 @@ async function seedDatabase() {
   await mongoose.connect(uri);
   console.log('[Seed] Connected successfully.');
 
-  // Clean existing collections to ensure idempotent re-runs
   console.log('[Seed] Clearing existing collections...');
   await Company.deleteMany({});
   await User.deleteMany({});
@@ -26,7 +25,6 @@ async function seedDatabase() {
 
   const passwordHash = await User.hashPassword(DEFAULT_PASSWORD);
 
-  // 1. Create Company A: Acme Textiles (26 working days)
   console.log('[Seed] Creating Company A (Acme Textiles)...');
   const companyA = await Company.create({
     name: 'Acme Textiles',
@@ -40,7 +38,6 @@ async function seedDatabase() {
     },
   });
 
-  // 2. Create Company B: Bright Foods (24 working days)
   console.log('[Seed] Creating Company B (Bright Foods)...');
   const companyB = await Company.create({
     name: 'Bright Foods',
@@ -54,7 +51,6 @@ async function seedDatabase() {
     },
   });
 
-  // 3. Create Users for Company A
   console.log('[Seed] Creating users for Company A...');
   const acmeAdmin = await User.create({
     companyId: companyA._id,
@@ -67,7 +63,6 @@ async function seedDatabase() {
     isActive: true,
   });
 
-  // Notice: Ramesh Kumar in Company A (required for bonus question)
   const rameshA = await User.create({
     companyId: companyA._id,
     name: 'Ramesh Kumar',
@@ -112,7 +107,6 @@ async function seedDatabase() {
     isActive: true,
   });
 
-  // 4. Create Users for Company B
   console.log('[Seed] Creating users for Company B...');
   const brightAdmin = await User.create({
     companyId: companyB._id,
@@ -125,7 +119,6 @@ async function seedDatabase() {
     isActive: true,
   });
 
-  // Ramesh Gupta in Company B (same first name to prove isolation!)
   const rameshB = await User.create({
     companyId: companyB._id,
     name: 'Ramesh Gupta',
@@ -170,10 +163,8 @@ async function seedDatabase() {
     isActive: true,
   });
 
-  // 5. Seed Historical Payroll for Last 3 Months (2026-08, 2026-09, 2026-10)
   console.log('[Seed] Seeding historical attendance and payroll calculations...');
 
-  // Helper to record payroll
   async function recordPayroll(company, employee, admin, month, present, absent, halfDay) {
     const workingDays = company.getWorkingDaysForMonth(month);
     const result = calculatePayroll({
@@ -207,35 +198,24 @@ async function seedDatabase() {
     });
   }
 
-  // Company A: Ramesh (Worked example from brief!)
-  // October 2026: 22 present, 2 absent, 2 half-days -> 3 LOP days
   await recordPayroll(companyA, rameshA, acmeAdmin, '2026-10', 22, 2, 2);
-  // September 2026: 25 present, 0 absent, 0 half-days (full attendance)
   await recordPayroll(companyA, rameshA, acmeAdmin, '2026-09', 25, 0, 0);
-  // August 2026: 24 present, 2 absent, 0 half-days
   await recordPayroll(companyA, rameshA, acmeAdmin, '2026-08', 24, 2, 0);
 
-  // Priya (Company A)
   await recordPayroll(companyA, priyaA, acmeAdmin, '2026-10', 24, 1, 1);
   await recordPayroll(companyA, priyaA, acmeAdmin, '2026-09', 23, 2, 0);
 
-  // Amit (Company A)
   await recordPayroll(companyA, amitA, acmeAdmin, '2026-10', 26, 0, 0);
 
-  // Sunita (Company A)
   await recordPayroll(companyA, sunitaA, acmeAdmin, '2026-10', 23, 2, 1);
 
-  // Company B: Ramesh Gupta
   await recordPayroll(companyB, rameshB, brightAdmin, '2026-10', 20, 3, 1);
   await recordPayroll(companyB, rameshB, brightAdmin, '2026-09', 24, 0, 0);
 
-  // Neha (Company B)
   await recordPayroll(companyB, nehaB, brightAdmin, '2026-10', 22, 2, 0);
 
-  // Vikram (Company B)
   await recordPayroll(companyB, vikramB, brightAdmin, '2026-10', 21, 1, 2);
 
-  // Pooja (Company B)
   await recordPayroll(companyB, poojaB, brightAdmin, '2026-10', 24, 0, 0);
 
   console.log('\n============================================================');

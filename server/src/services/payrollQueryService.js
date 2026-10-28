@@ -1,10 +1,5 @@
 const User = require('../models/User');
 const Attendance = require('../models/Attendance');
-
-/**
- * Normalizes English month names or ISO months into "YYYY-MM" format.
- * E.g., "October" -> "2026-10" (using current year)
- */
 function resolveMonth(monthInput) {
   if (!monthInput) {
     return new Date().toISOString().slice(0, 7);
@@ -12,7 +7,6 @@ function resolveMonth(monthInput) {
 
   const str = String(monthInput).trim().toLowerCase();
 
-  // If already YYYY-MM
   if (/^\d{4}-(0[1-9]|1[0-2])$/.test(str)) {
     return str;
   }
@@ -45,7 +39,6 @@ function resolveMonth(monthInput) {
     dec: '12',
   };
 
-  // Check if starts with month name or contains year
   const parts = str.split(/[\s,]+/);
   let resolvedMonth = null;
   let resolvedYear = currentYear;
@@ -64,20 +57,11 @@ function resolveMonth(monthInput) {
 
   return null;
 }
-
-/**
- * Searches for an employee by name within the authenticated caller's company.
- * Strictly respects caller's tenant boundary and role permissions.
- *
- * @param {Object} caller - req.user object
- * @param {string} name - search query
- */
 async function findEmployeeByName(caller, name) {
   if (!name || typeof name !== 'string') {
     return { found: false, message: 'Please provide a valid employee name.' };
   }
 
-  // Tenant isolation: query is strictly scoped to caller.companyId
   const regex = new RegExp(name.trim(), 'i');
   const employees = await User.find({
     companyId: caller.companyId,
@@ -91,7 +75,6 @@ async function findEmployeeByName(caller, name) {
     };
   }
 
-  // If caller is employee role, they can only query their own name!
   if (caller.role === 'employee') {
     const isSelf = employees.some((e) => e._id.toString() === caller._id.toString());
     if (!isSelf) {
@@ -101,7 +84,6 @@ async function findEmployeeByName(caller, name) {
         message: 'Access denied: As an employee, you can only query your own payroll information.',
       };
     }
-    // Filter down to only self
     const selfEmployee = employees.find((e) => e._id.toString() === caller._id.toString());
     return {
       found: true,
@@ -131,15 +113,6 @@ async function findEmployeeByName(caller, name) {
     employee: employees[0],
   };
 }
-
-/**
- * Retrieves payroll record for a given employee and month.
- * Strictly checks tenant boundaries and caller role permissions.
- *
- * @param {Object} caller - req.user object
- * @param {string} employeeId - target employee ObjectId string
- * @param {string} monthStr - month string (e.g. "October", "2026-10")
- */
 async function getPayrollRecord(caller, employeeId, monthStr) {
   const month = resolveMonth(monthStr);
 
@@ -150,7 +123,6 @@ async function getPayrollRecord(caller, employeeId, monthStr) {
     };
   }
 
-  // RBAC check: employees cannot view someone else's payroll
   if (caller.role === 'employee' && caller._id.toString() !== employeeId.toString()) {
     return {
       success: false,
@@ -159,7 +131,6 @@ async function getPayrollRecord(caller, employeeId, monthStr) {
     };
   }
 
-  // Tenant isolation: verify employee belongs to caller's company
   const employee = await User.findOne({
     _id: employeeId,
     companyId: caller.companyId,

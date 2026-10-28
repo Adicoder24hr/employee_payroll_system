@@ -1,4 +1,4 @@
-# System Design Note: Multi-Tenant Attendance-to-Payroll System
+# System Design Note: Attendance-to-Payroll System
 
 **Author:** Aditya Bhalerao  
 **Role:** Full-Stack Developer Take-Home Assignment (Mobius Bloom Ventures / MobiusEMS)  
@@ -7,7 +7,7 @@
 
 ## 1. Executive Summary & Architecture Overview
 
-The system is a production-grade, multi-tenant Attendance-to-Payroll web application built to service multiple independent business organizations. It guarantees absolute tenant data isolation, strict role-based access control (RBAC), deterministic payroll calculation, and a conversational AI query interface backed by grounded function calling.
+The system is a multi-company attendance and payroll web app. It scopes records to the signed-in user's company, uses role-based access, calculates payroll, and supports payroll questions through a company-scoped query parser.
 
 ### High-Level Architecture
 ```
@@ -38,7 +38,7 @@ The system is a production-grade, multi-tenant Attendance-to-Payroll web applica
 ## 2. Data Models & Schema Design
 
 ### 2.1 Company (`companies`)
-Represents an enterprise tenant.
+Represents a company.
 - `_id`: ObjectId
 - `name`: String (e.g. "Acme Textiles")
 - `code`: String (unique identifier/slug, e.g. "ACME")
@@ -100,7 +100,7 @@ To prevent this:
   - The query is executed with: `User.findOne({ _id: targetId, companyId: req.user.companyId })`.
   - Because Company B's entity has a different `companyId`, the database returns `null`.
   - The API responds with **`404 Not Found`**.
-  - **Reason:** Returning `403 Forbidden` would confirm to the attacker that the entity exists in the system (existence leakage). Returning `404` maintains complete opacity.
+  - **Reason:** Returning `403 Forbidden` would confirm that the entity exists. Returning `404` avoids revealing that information.
 
 ### Role-Based Access Control (RBAC)
 - **Admin:** Permitted to query all employees within their own company, create employees, configure company working days, and calculate/view monthly payroll for anyone in their company.
@@ -145,16 +145,15 @@ All currency values are rounded to 2 decimal places using deterministic financia
 
 ---
 
-## 5. Bonus: Natural-Language Endpoint Safety & Tool Calling
+## 5. Payroll Query Endpoint
 
-The `/api/ask` endpoint enables conversational payroll queries (e.g. *"What is Ramesh's net salary for October?"*) via LLM Tool / Function Calling.
+The `/api/ask` endpoint accepts payroll questions such as *"What is Ramesh's net salary for October?"*. The server parses the question and reads matching company-scoped payroll records.
 
-### Security & Anti-Hallucination Guarantees
-1. **Zero Hallucination:** The LLM's system prompt strictly prohibits inferring or estimating compensation figures. All financial data must be retrieved from executing tool calls against our verified API services.
-2. **Identity Propagation:** When the LLM decides to invoke a tool (such as `find_employee_by_name` or `get_payroll`), the tool execution inherits the authenticated user's `req.user` context.
-3. **No Cross-Tenant Leakage:** The tools invoke internal services that automatically filter by `req.user.companyId`. The LLM cannot provide or modify `companyId`.
-4. **Role Enforcement:** If an employee asks *"What is John's salary?"*, the tool layer rejects the query with an access violation, which the LLM returns as an authorized rejection.
-5. **Ambiguity Resolution:** If multiple employees share a name (or a first name) within the company, the tool returns the list of matching candidates and asks the user to clarify by email or designation.
+### Query behavior
+1. Payroll figures come from company-scoped services; the parser does not estimate them.
+2. Services use the authenticated user's `req.user` context and company ID.
+3. Employees can only query their own payroll records.
+4. If multiple employees match a name, the response lists candidates for clarification.
 
 ---
 
@@ -169,7 +168,7 @@ The `/api/ask` endpoint enables conversational payroll queries (e.g. *"What is R
 
 | Decision / Trade-off | Rationale | What I'd Do With More Time |
 |---|---|---|
-| **Shared Database, Shared Schema (Tenant Column)** | Optimal for cost-efficiency, rapid migrations, and moderate tenant counts. | Separate database per enterprise tier or PostgreSQL Row-Level Security (RLS) for hard kernel isolation. |
-| **Flat Deduction Rate** | Simple and clean for a take-home assessment. | Comprehensive tax slabs (e.g. Indian New Tax Regime 115BAC), Employee PF (12%), Professional Tax, and custom allowances (HRA, Special). |
+| **Shared Database, Shared Schema (Tenant Column)** | Keeps tenant data in one database with a company identifier. | A separate database per company or PostgreSQL row-level security for stronger database-level isolation. |
+| **Flat Deduction Rate** | Uses a single configurable percentage. | Add Indian tax slabs (e.g. New Tax Regime 115BAC), Employee PF (12%), Professional Tax, and custom allowances (HRA, Special). |
 | **Summary-based Monthly Attendance** | Simple UI steppers; immediate calculation without needing 30 individual date pickers. | Daily punch clocking with biometric/geo-fence integration, shift management, and leave approval workflows. |
-| **Stateless Bearer JWT** | Highly performant, standard for modern SPAs. | Refresh token rotation in httpOnly secure cookies + Redis-backed token revocation list. |
+| **Stateless Bearer JWT** | Works with the client's bearer-token requests. | Refresh token rotation in httpOnly secure cookies + Redis-backed token revocation list. |

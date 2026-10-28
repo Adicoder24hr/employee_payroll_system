@@ -1,24 +1,24 @@
-# Enterprise Multi-Tenant Attendance-to-Payroll System
+# Attendance-to-Payroll System
 
 > **Take-Home Assessment for Full-Stack Developer Role**  
 > **Company:** Mobius Bloom Ventures Pvt. Ltd. (MobiusEMS / Whalexy)  
 > **Candidate:** Aditya Bhalerao  
-> **Status:** Full-Stack Production Implementation (Node.js + React + MongoDB)
+> **Status:** Full-Stack Implementation (Node.js + React + MongoDB)
 
 ---
 
-## 🌟 Overview & Core Highlights
+## Overview
 
-This project implements a multi-tenant attendance-to-payroll management platform engineered with an emphasis on **strict multi-tenancy isolation**, **role-based access control (RBAC)**, **deterministic payroll calculation**, and a **mobile-first, responsive dashboard UI**.
+This project is an attendance and payroll app with company-scoped data, role-based access, payroll calculations, and a responsive dashboard.
 
 ### Key Capabilities
-1. **Multi-Tenancy Isolation:** Strict tenant boundaries. Company A can never view or manipulate Company B's data under any condition. Requests for resources from other tenants yield `404 Not Found` to prevent entity enumeration.
-2. **Deterministic Pure Payroll Engine:** Encapsulated financial calculation logic computing Loss-Of-Pay (LOP), gross earnings, statutory deductions, and net payouts with complete test coverage.
+1. **Company data scope:** Queries use the signed-in user's company. Requests for another company's records return `404 Not Found`.
+2. **Payroll calculations:** The payroll calculator computes Loss of Pay (LOP), gross pay, deductions, and net pay. Unit tests cover the calculation rules.
 3. **Role-Based Access Control (RBAC):**
    - **Admin:** Manages company employees, configures monthly working days, executes payroll runs, and views aggregate reports.
-   - **Employee:** Restricted strictly to self-service views (personal profile, personal payslips).
-4. **Natural-Language Query Interface (Bonus AI Endpoint):** An AI query assistant powered by LLM tool calling. It answers plain-English payroll queries (e.g. *"What is Ramesh's net salary for October?"*) strictly by executing company-scoped internal queries, preventing hallucinations.
-5. **Modern Mobile-First Design:** Crafted with React, Vite, and Tailwind CSS. Features full Dark/Light theme switching, interactive charts (Recharts), micro-animations, skeleton loaders, and quick 1-click demo login buttons.
+   - **Employee:** Can view their profile and payslips.
+4. **Payroll queries:** The `/api/ask` endpoint answers supported questions using payroll records scoped to the caller's company.
+5. **Responsive interface:** Built with React, Vite, and Tailwind CSS. Includes light and dark themes, charts, loading placeholders, and demo login buttons.
 
 ---
 
@@ -26,15 +26,15 @@ This project implements a multi-tenant attendance-to-payroll management platform
 
 | Domain | Technology | Purpose |
 |---|---|---|
-| **Backend** | Node.js (v20+), Express.js | High-performance REST API |
+| **Backend** | Node.js (v20+), Express.js | REST API |
 | **Database** | MongoDB Atlas, Mongoose ODM | Multi-tenant document database with compound uniqueness |
 | **Authentication** | JSON Web Tokens (JWT), bcryptjs | Cryptographic stateless session & tenant identity |
 | **Security** | Helmet, CORS, Express-Rate-Limit, Express-Validator | Defense-in-depth API hardening |
 | **Testing** | Jest, Supertest | Unit & tenant-isolation testing |
 | **Frontend** | React 18, Vite | Mobile-first single-page application |
-| **Styling** | Tailwind CSS, Lucide React Icons | Modern SaaS design system with dark/light themes |
+| **Styling** | Tailwind CSS, Lucide React Icons | Dark and light themes |
 | **Visualizations**| Recharts | Interactive net salary distribution & analytics |
-| **AI Integration**| Google Gemini / OpenAI Tool Calling | Grounded natural language data retrieval |
+| **Payroll queries** | Company-scoped query parser | Reads payroll records |
 
 ---
 
@@ -42,11 +42,9 @@ This project implements a multi-tenant attendance-to-payroll management platform
 
 ```
 Employee_payroll_system/
-├── AGENTS.md               # Assignment brief & requirements
-├── README.md               # Comprehensive project documentation
-├── DESIGN.md               # In-depth architectural & security design note
+├── README.md               # Project setup and overview
+├── DESIGN.md               # Architecture and security details
 ├── API.md                  # REST API contract & endpoint specifications
-├── PROGRESS.md             # Development status, checklist & decision log
 ├── .gitignore              # Git ignore configuration
 │
 ├── server/                 # Express.js REST API Backend
@@ -132,11 +130,11 @@ npm run seed
 ### 5. Running the Application
 
 ```bash
-# Terminal 1: Launch Backend Server (runs on http://localhost:5000)
+# Terminal 1: Start the backend (http://localhost:5000)
 cd server
 npm run dev
 
-# Terminal 2: Launch Frontend Client (runs on http://localhost:5173)
+# Terminal 2: Start the client (http://localhost:5173)
 cd client
 npm run dev
 ```

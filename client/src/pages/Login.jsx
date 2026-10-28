@@ -9,7 +9,6 @@ import {
   Lock,
   Mail,
   Building,
-  ShieldCheck,
   Zap,
   Sun,
   Moon,
@@ -65,7 +64,6 @@ export default function Login() {
 
   return (
     <div className="min-h-screen flex flex-col lg:flex-row bg-slate-50 dark:bg-slate-950 transition-colors">
-      {/* Top right theme toggle */}
       <div className="absolute top-4 right-4 z-20">
         <button
           onClick={toggleTheme}
@@ -75,54 +73,17 @@ export default function Login() {
           {theme === 'dark' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-slate-700" />}
         </button>
       </div>
-
-      {/* Brand Hero Panel (Desktop) */}
-      <div className="hidden lg:flex lg:w-1/2 relative bg-gradient-to-br from-indigo-900 via-slate-900 to-indigo-950 p-12 text-white flex-col justify-between overflow-hidden">
-        {/* Subtle background glow */}
+      <div className="hidden lg:flex lg:w-1/2 relative bg-gradient-to-br from-indigo-900 via-slate-900 to-indigo-950 p-12 text-white flex-col justify-center overflow-hidden">
         <div className="absolute -top-32 -left-32 w-96 h-96 bg-indigo-500/20 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-violet-500/20 rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative z-10">
-          <div className="inline-flex items-center space-x-2.5 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/10 text-xs font-semibold text-indigo-200 mb-8">
+          <div className="inline-flex items-center space-x-2.5 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/10 text-xs font-semibold text-indigo-200">
             <Zap className="w-3.5 h-3.5 text-indigo-400" />
-            <span>MobiusEMS Enterprise Payroll Engine</span>
+            <span>MobiusEMS</span>
           </div>
-          <h1 className="text-4xl xl:text-5xl font-extrabold tracking-tight leading-tight">
-            Multi-Tenant Attendance & Deterministic Payroll
-          </h1>
-          <p className="mt-4 text-slate-300 text-base max-w-lg leading-relaxed">
-            Enterprise data isolation, verified role-based access, and an AI-driven payroll query assistant engineered for precision.
-          </p>
-        </div>
-
-        {/* Feature Pills */}
-        <div className="relative z-10 space-y-4 max-w-md">
-          <div className="flex items-start space-x-3.5 p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
-            <ShieldCheck className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
-            <div>
-              <h4 className="text-sm font-semibold text-white">Strict Multi-Tenant Isolation</h4>
-              <p className="text-xs text-slate-400 mt-0.5">
-                Company A and Company B data are permanently segregated via JWT claims and compound MongoDB indexes.
-              </p>
-            </div>
-          </div>
-          <div className="flex items-start space-x-3.5 p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
-            <Zap className="w-5 h-5 text-indigo-400 flex-shrink-0 mt-0.5" />
-            <div>
-              <h4 className="text-sm font-semibold text-white">Deterministic Calculations</h4>
-              <p className="text-xs text-slate-400 mt-0.5">
-                Exact Loss of Pay (LOP), statutory deductions, and net payouts computed using pure financial functions.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="relative z-10 text-xs text-slate-500">
-          Developed for Mobius Bloom Ventures • Candidate: Aditya Bhalerao
         </div>
       </div>
-
-      {/* Login Form Panel */}
       <div className="flex-1 flex items-center justify-center p-6 sm:p-12 lg:w-1/2">
         <div className="w-full max-w-md space-y-8 animate-in fade-in duration-300">
           <div>
@@ -136,8 +97,6 @@ export default function Login() {
               Sign in to manage company payroll or view your personal payslips.
             </p>
           </div>
-
-          {/* Quick Demo Login Preset Buttons */}
           <div className="p-4 rounded-2xl bg-indigo-50/70 dark:bg-indigo-950/40 border border-indigo-100 dark:border-indigo-900/60 space-y-2.5">
             <div className="flex items-center justify-between">
               <span className="text-[11px] font-bold uppercase tracking-wider text-indigo-700 dark:text-indigo-300 flex items-center gap-1.5">
@@ -177,8 +136,6 @@ export default function Login() {
               </button>
             </div>
           </div>
-
-          {/* Regular Login Form */}
           <form onSubmit={handleLogin} className="space-y-4">
             <Input
               label="Email address"

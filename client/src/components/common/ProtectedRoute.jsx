@@ -23,9 +23,7 @@ export default function ProtectedRoute({ children, allowedRoles = [] }) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  // If specific roles are required (e.g., ['admin'])
   if (allowedRoles.length > 0 && !allowedRoles.includes(user?.role)) {
-    // If an employee tries to access admin route, redirect them to employee portal
     if (user?.role === 'employee') {
       return <Navigate to="/my-payslips" replace />;
     }

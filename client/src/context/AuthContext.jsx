@@ -15,7 +15,6 @@ export function AuthProvider({ children }) {
   const [token, setToken] = useState(() => localStorage.getItem('token'));
   const [loading, setLoading] = useState(true);
 
-  // Sync profile from server on mount if token exists
   useEffect(() => {
     async function loadUser() {
       if (token) {

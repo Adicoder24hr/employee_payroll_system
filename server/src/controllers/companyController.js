@@ -1,9 +1,4 @@
 const Company = require('../models/Company');
-
-/**
- * Get current company metadata and working days config.
- * GET /api/companies/me
- */
 async function getMyCompany(req, res, next) {
   try {
     const company = await Company.findById(req.user.companyId);
@@ -15,7 +10,6 @@ async function getMyCompany(req, res, next) {
       });
     }
 
-    // Convert workingDaysConfig map to regular object for JSON serialization
     const workingDaysConfigObj = {};
     if (company.workingDaysConfig) {
       for (const [key, value] of company.workingDaysConfig.entries()) {
@@ -38,12 +32,6 @@ async function getMyCompany(req, res, next) {
     next(error);
   }
 }
-
-/**
- * Update working days configuration for a specific month.
- * PUT /api/companies/me/working-days
- * Body: { month: "YYYY-MM", days: number } or { defaultWorkingDays: number }
- */
 async function updateWorkingDays(req, res, next) {
   try {
     const { month, days, defaultWorkingDays } = req.body;

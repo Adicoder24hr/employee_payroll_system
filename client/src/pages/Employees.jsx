@@ -26,7 +26,6 @@ export default function Employees() {
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
 
-  // Add Employee Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
@@ -100,7 +99,6 @@ export default function Employees() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-slate-50">
@@ -119,8 +117,6 @@ export default function Employees() {
           Add Employee
         </Button>
       </div>
-
-      {/* Search Bar */}
       <Card noPadding className="p-3">
         <div className="relative">
           <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
@@ -133,8 +129,6 @@ export default function Employees() {
           />
         </div>
       </Card>
-
-      {/* Responsive Employee List: Stacked Cards on Mobile, Table on Desktop */}
       <Card
         title={`Staff Members (${employees.length})`}
         subtitle={`Exclusively filtered for ${user?.company?.name}`}
@@ -147,7 +141,6 @@ export default function Employees() {
           </div>
         ) : employees.length > 0 ? (
           <>
-            {/* Desktop Table View */}
             <div className="hidden md:block overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
@@ -199,8 +192,6 @@ export default function Employees() {
                 </tbody>
               </table>
             </div>
-
-            {/* Mobile Stacked Cards View */}
             <div className="md:hidden space-y-3">
               {employees.map((emp) => (
                 <div
@@ -242,8 +233,6 @@ export default function Employees() {
           </div>
         )}
       </Card>
-
-      {/* Add Employee Modal */}
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}

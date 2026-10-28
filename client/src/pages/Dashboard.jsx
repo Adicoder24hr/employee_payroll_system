@@ -60,8 +60,7 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-6">
-      {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <div>
           <div className="flex items-center space-x-2.5">
             <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-slate-50">
@@ -72,11 +71,9 @@ export default function Dashboard() {
             </Badge>
           </div>
           <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
-            Real-time multi-tenant payroll metrics, attendance tallies, and disbursements.
+            Payroll and attendance for the selected month.
           </p>
         </div>
-
-        {/* Controls: Month filter & CTA */}
         <div className="flex items-center space-x-3">
           <div className="flex items-center space-x-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-1.5 shadow-sm">
             <Calendar className="w-4 h-4 text-slate-400" />
@@ -100,10 +97,7 @@ export default function Dashboard() {
           </Button>
         </div>
       </div>
-
-      {/* Metrics Row */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-        {/* Metric 1: Total Employees */}
         <Card hoverable className="relative overflow-hidden">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">
@@ -131,8 +125,6 @@ export default function Dashboard() {
             </p>
           </div>
         </Card>
-
-        {/* Metric 2: Working Days */}
         <Card hoverable className="relative overflow-hidden">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">
@@ -155,8 +147,6 @@ export default function Dashboard() {
             </p>
           </div>
         </Card>
-
-        {/* Metric 3: Total Net Payroll */}
         <Card hoverable className="relative overflow-hidden">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">
@@ -179,8 +169,6 @@ export default function Dashboard() {
             </p>
           </div>
         </Card>
-
-        {/* Metric 4: Total LOP Days */}
         <Card hoverable className="relative overflow-hidden">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">
@@ -204,10 +192,7 @@ export default function Dashboard() {
           </div>
         </Card>
       </div>
-
-      {/* Main Charts & Quick Actions Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Recharts Chart: Salary distribution */}
         <Card
           className="lg:col-span-2"
           title={`Net Salary Distribution (${currentMonth})`}
@@ -270,17 +255,15 @@ export default function Dashboard() {
             </div>
           )}
         </Card>
-
-        {/* Ask AI Banner & Isolation Status Card */}
         <div className="space-y-6">
           <Card
             className="bg-gradient-to-br from-indigo-900 to-violet-950 text-white border-indigo-800 shadow-xl"
             title="Ask AI Query Assistant"
-            subtitle="Grounded natural-language payroll queries"
+            subtitle="Ask payroll questions"
           >
             <div className="space-y-3.5">
               <p className="text-xs text-indigo-200 leading-relaxed">
-                Query payroll figures naturally without manual report hunting. Queries are strictly company-isolated.
+                Ask questions about payroll for your company.
               </p>
               <div className="p-3 rounded-xl bg-white/10 backdrop-blur-sm border border-white/10 text-xs font-mono text-indigo-100 flex items-center justify-between">
                 <span>"What is Ramesh's net salary for October?"</span>
@@ -328,8 +311,6 @@ export default function Dashboard() {
           </Card>
         </div>
       </div>
-
-      {/* Recent Payroll Runs Table / Stacked Cards */}
       <Card
         title="Recent Payroll Calculations"
         subtitle="Latest processed attendance-to-payroll disbursements in your company"

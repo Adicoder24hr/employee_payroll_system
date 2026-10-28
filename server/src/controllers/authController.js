@@ -1,10 +1,6 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const Company = require('../models/Company');
-
-/**
- * Generates a signed JWT with standard claims.
- */
 function generateToken(user) {
   return jwt.sign(
     {
@@ -16,11 +12,6 @@ function generateToken(user) {
     { expiresIn: '7d' }
   );
 }
-
-/**
- * Authenticates user credentials and issues a JWT.
- * POST /api/auth/login
- */
 async function login(req, res, next) {
   try {
     const { email, password, companyCode } = req.body;
@@ -34,7 +25,6 @@ async function login(req, res, next) {
 
     const query = { email: email.toLowerCase().trim() };
 
-    // If companyCode provided, filter by that company
     if (companyCode) {
       const company = await Company.findOne({ code: companyCode.toUpperCase().trim() });
       if (!company) {
@@ -46,7 +36,6 @@ async function login(req, res, next) {
       query.companyId = company._id;
     }
 
-    // Include passwordHash for verification
     const user = await User.findOne(query).select('+passwordHash');
 
     if (!user) {
@@ -100,11 +89,6 @@ async function login(req, res, next) {
     next(error);
   }
 }
-
-/**
- * Returns current authenticated user and company profile.
- * GET /api/auth/me
- */
 async function getMe(req, res, next) {
   try {
     const user = await User.findById(req.user._id);

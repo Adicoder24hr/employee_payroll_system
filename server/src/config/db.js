@@ -1,8 +1,4 @@
 const mongoose = require('mongoose');
-
-/**
- * Connects to MongoDB Atlas using the configured connection URI.
- */
 async function connectDB(uri) {
   const mongoURI = uri || process.env.MONGODB_URI;
 
@@ -19,10 +15,6 @@ async function connectDB(uri) {
     throw error;
   }
 }
-
-/**
- * Disconnects from MongoDB.
- */
 async function disconnectDB() {
   await mongoose.disconnect();
 }

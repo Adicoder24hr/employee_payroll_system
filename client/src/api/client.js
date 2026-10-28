@@ -7,7 +7,6 @@ const api = axios.create({
   },
 });
 
-// Request interceptor: Attach JWT token if present
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
@@ -19,7 +18,6 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Response interceptor: Handle 401 Unauthorized globally
 api.interceptors.response.use(
   (response) => response,
   (error) => {

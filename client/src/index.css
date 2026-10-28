@@ -9,7 +9,6 @@
   }
 }
 
-/* Custom scrollbars */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -28,7 +27,6 @@
   background: rgba(156, 163, 175, 0.7);
 }
 
-/* Glassmorphism utility */
 .glass {
   background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(12px);
@@ -41,7 +39,6 @@
   -webkit-backdrop-filter: blur(12px);
 }
 
-/* Print Stylesheet for Payslip */
 @media print {
   body * {
     visibility: hidden;

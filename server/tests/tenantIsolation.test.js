@@ -30,14 +30,12 @@ describe('Tenant Isolation & RBAC Integration Tests', () => {
   let payrollRecordA1, payrollRecordB1;
 
   beforeEach(async () => {
-    // Clear collections
     await Company.deleteMany({});
     await User.deleteMany({});
     await Attendance.deleteMany({});
 
     const passwordHash = await User.hashPassword('Password123!');
 
-    // Create Company A (Acme Textiles)
     companyA = await Company.create({
       name: 'Acme Textiles',
       code: 'ACME',
@@ -45,7 +43,6 @@ describe('Tenant Isolation & RBAC Integration Tests', () => {
       defaultDeductionPercentage: 10,
     });
 
-    // Create Company B (Bright Foods)
     companyB = await Company.create({
       name: 'Bright Foods',
       code: 'BRIGHT',
@@ -53,7 +50,6 @@ describe('Tenant Isolation & RBAC Integration Tests', () => {
       defaultDeductionPercentage: 10,
     });
 
-    // Company A Users
     adminA = await User.create({
       companyId: companyA._id,
       name: 'Admin Acme',
@@ -81,7 +77,6 @@ describe('Tenant Isolation & RBAC Integration Tests', () => {
       monthlySalary: 55000,
     });
 
-    // Company B Users
     adminB = await User.create({
       companyId: companyB._id,
       name: 'Admin Bright',
@@ -100,7 +95,6 @@ describe('Tenant Isolation & RBAC Integration Tests', () => {
       monthlySalary: 52000,
     });
 
-    // Create sample payroll records
     payrollRecordA1 = await Attendance.create({
       companyId: companyA._id,
       employeeId: employeeA1._id,
@@ -139,7 +133,6 @@ describe('Tenant Isolation & RBAC Integration Tests', () => {
       calculatedBy: adminB._id,
     });
 
-    // Generate tokens
     tokenAdminA = jwt.sign(
       { userId: adminA._id, companyId: companyA._id, role: 'admin' },
       TEST_JWT_SECRET
@@ -162,7 +155,6 @@ describe('Tenant Isolation & RBAC Integration Tests', () => {
         .get(`/api/employees/${employeeB1._id}`)
         .set('Authorization', `Bearer ${tokenAdminA}`);
 
-      // Must be 404 to avoid leaking existence of Company B's employee
       expect(res.status).toBe(404);
       expect(res.body.success).toBe(false);
     });
@@ -185,11 +177,9 @@ describe('Tenant Isolation & RBAC Integration Tests', () => {
       expect(res.body.success).toBe(true);
       const employeeIds = res.body.employees.map((e) => e._id.toString());
 
-      // Should contain Company A employees
       expect(employeeIds).toContain(employeeA1._id.toString());
       expect(employeeIds).toContain(employeeA2._id.toString());
 
-      // MUST NEVER contain Company B employees
       expect(employeeIds).not.toContain(employeeB1._id.toString());
       expect(employeeIds).not.toContain(adminB._id.toString());
     });

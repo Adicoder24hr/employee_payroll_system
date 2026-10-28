@@ -13,17 +13,14 @@ function buildProjectGuidePdf() {
   const writeStream = fs.createWriteStream(outputPath);
   doc.pipe(writeStream);
 
-  // Palette
-  const PRIMARY = '#4338ca'; // Indigo
-  const TEXT = '#1e293b'; // Slate 800
-  const MUTED = '#64748b'; // Slate 500
-  const LIGHT_BG = '#f8fafc'; // Slate 50
-  const BORDER = '#cbd5e1'; // Slate 300
-  const ACCENT = '#059669'; // Emerald
-
-  // Helper formatting functions
+  const PRIMARY = '#4338ca';
+  const TEXT = '#1e293b';
+  const MUTED = '#64748b';
+  const LIGHT_BG = '#f8fafc';
+  const BORDER = '#cbd5e1';
+  const ACCENT = '#059669';
   function addTitlePage() {
-    doc.rect(0, 0, doc.page.width, doc.page.height).fill('#0f172a'); // Dark slate background
+    doc.rect(0, 0, doc.page.width, doc.page.height).fill('#0f172a');
 
     doc.fillColor('#818cf8').fontSize(14).font('Helvetica-Bold')
       .text('MOBIUS BLOOM VENTURES PVT. LTD. (MobiusEMS / Whalexy)', 50, 180, { align: 'center' });
@@ -32,7 +29,7 @@ function buildProjectGuidePdf() {
       .text('Multi-Tenant Attendance & Deterministic Payroll Engine', 50, 215, { align: 'center' });
 
     doc.fillColor('#94a3b8').fontSize(14).font('Helvetica')
-      .text('Comprehensive Technical Architecture, Security & Implementation Guide', 50, 280, { align: 'center' });
+      .text('System Documentation', 50, 280, { align: 'center' });
 
     doc.rect(150, 320, doc.page.width - 300, 2).fill('#4f46e5');
 
@@ -49,7 +46,7 @@ function buildProjectGuidePdf() {
       .text('• End-to-End Multi-Tenant Isolation & Zero-Leaked 404 HTTP Semantics', 100, 545)
       .text('• Pure Deterministic Payroll Engine & 20 Passing Automated Tests', 100, 565)
       .text('• Mobile-First React (Vite) UI with Dark/Light Mode & 1-Click Demo Logins', 100, 585)
-      .text('• Bonus Grounded Natural Language Query Assistant (No Hallucinations)', 100, 605)
+      .text('• Payroll Query Endpoint', 100, 605)
       .text('• Detailed Code Tour, Formula Walkthrough & 6 Interview Model Answers', 100, 625);
 
     doc.addPage();
@@ -87,10 +84,8 @@ function buildProjectGuidePdf() {
     doc.font('Helvetica');
   }
 
-  // --- 1. TITLE PAGE ---
   addTitlePage();
 
-  // --- 2. TABLE OF CONTENTS ---
   addHeader('Table of Contents');
   addParagraph('This reference guide documents the architecture, implementation choices, and operational instructions for the project.');
   addBullet('1. Project Overview & Requirements Satisfied');
@@ -103,10 +98,9 @@ function buildProjectGuidePdf() {
   addBullet('8. Bonus Natural Language Query Assistant (POST /api/ask)');
   addBullet('9. Assumptions, Known Limitations & Architectural Trade-offs');
   addBullet('10. Likely Technical Interview Questions & Model Answers');
-  addBullet('11. Production Cloud Deployment Blueprint (Render + Vercel)');
+  addBullet('11. Deployment (Render + Vercel)');
   doc.moveDown(2);
 
-  // --- SECTION 1 ---
   addHeader('1. Project Overview & Requirements Satisfied');
   addParagraph('This system was developed as a Round 2 take-home engineering assessment for Mobius Bloom Ventures Pvt. Ltd. (MobiusEMS / Whalexy). It solves the problem of automated attendance aggregation and monthly salary disbursement across multiple corporate tenants.');
   addSubHeader('Core Requirements Fully Met:');
@@ -114,12 +108,11 @@ function buildProjectGuidePdf() {
   addBullet('Deterministic payroll endpoint calculating Loss of Pay (LOP) days, earned gross salary, 10% statutory tax/PF deductions, and final net payouts.');
   addBullet('Role-Based Access Control (RBAC): Admin can manage and run payroll for anyone in their organization; Employee can only view their own records.');
   addBullet('Cryptographic Multi-Tenancy: Company A data is strictly invisible to Company B. Cross-tenant access yields 404 Not Found to prevent resource enumeration.');
-  addBullet('Robust backend testing suite with 20 passing unit and integration test cases covering edge cases, rounding, and tenant boundaries.');
-  addBullet('Bonus Grounded Natural-Language Query Assistant (POST /api/ask) answering queries like "What is Ramesh\'s net salary for October?" exclusively via internal tool execution.');
+  addBullet('Server tests cover payroll calculations, rounding, and tenant boundaries.');
+  addBullet('Payroll query endpoint (POST /api/ask) answers questions like "What is Ramesh\'s net salary for October?" exclusively via internal tool execution.');
   addBullet('High-polish mobile-first dashboard UI with dark/light theme switching, interactive charts (Recharts), and quick 1-click demo logins.');
   doc.addPage();
 
-  // --- SECTION 2 ---
   addHeader('2. Architecture & Monorepo Directory Structure');
   addParagraph('The project follows a clean monorepo architecture separating the Node/Express backend from the React Vite frontend.');
   addCodeBlock(
@@ -129,7 +122,7 @@ function buildProjectGuidePdf() {
 ├── DESIGN.md                 # 2-page system design & security note
 ├── API.md                    # REST API specifications and contracts
 ├── PROGRESS.md               # Development memory, changelog & checklist
-├── PROJECT_GUIDE.pdf         # Comprehensive project walkthrough document
+├── PROJECT_GUIDE.pdf         # Project guide
 ├── .gitignore                # Excludes .env, node_modules, build outputs
 │
 ├── server/                   # Backend Express REST API
@@ -140,7 +133,7 @@ function buildProjectGuidePdf() {
 │   │   ├── models/           # Mongoose schemas: Company, User, Attendance
 │   │   ├── controllers/      # auth, company, employee, payroll, ask
 │   │   ├── middleware/       # authenticate, authorizeRoles, errorHandler
-│   │   ├── services/         # payrollQueryService (grounded tool engine)
+│   │   ├── services/         # payrollQueryService (payroll query parser)
 │   │   ├── utils/            # Pure payrollCalculator.js engine
 │   │   └── scripts/seed.js   # Idempotent database seeder
 │   └── tests/                # Jest test suites (unit + integration)
@@ -157,7 +150,6 @@ function buildProjectGuidePdf() {
   );
   doc.moveDown(1);
 
-  // --- SECTION 3 ---
   addHeader('3. Getting Started: Installation, Seeding & Execution');
   addParagraph('Follow these commands to install, seed, test, and run the entire stack locally:');
   addCodeBlock(
@@ -184,7 +176,6 @@ npm run dev   # runs on http://localhost:5173`
   );
   doc.addPage();
 
-  // --- SECTION 4 ---
   addHeader('4. Demo Credentials & Step-by-Step Reviewer Tour');
   addParagraph('The seeder sets up two completely segregated organizations to verify isolation and role permissions. The login page provides 1-Click Quick Demo Login buttons for immediate evaluation.');
 
@@ -205,7 +196,6 @@ npm run dev   # runs on http://localhost:5173`
   addBullet('5. Test Ask AI: In the Ask AI page, click the suggestion chip "What is Ramesh\'s net salary for October?". The assistant executes internal tenant tools and returns ₹47,769.24.');
   doc.addPage();
 
-  // --- SECTION 5 ---
   addHeader('5. Pure Payroll Calculation Engine & Worked Example');
   addParagraph('The payroll engine is encapsulated inside a pure, deterministic function in server/src/utils/payrollCalculator.js. It has zero database dependencies, making it 100% unit-testable and mathematically deterministic.');
 
@@ -241,7 +231,6 @@ npm run dev   # runs on http://localhost:5173`
   addParagraph('Unmarked Days Rule: Any working days not explicitly recorded as Present, Absent, or Half-day are treated as Absent, encouraging diligent HR attendance bookkeeping.');
   doc.addPage();
 
-  // --- SECTION 6 ---
   addHeader('6. Multi-Tenancy Enforcement & RBAC Security');
   addParagraph('Security and tenant isolation form the core requirement of this system.');
 
@@ -261,7 +250,6 @@ const employee = await User.findOne({
 });
 
 if (!employee) {
-  // Returns 404 (NOT 403) to prevent existence leakage of other tenants!
   return res.status(404).json({ success: false, message: 'Employee not found.' });
 }`
   );
@@ -272,7 +260,6 @@ if (!employee) {
   addBullet('Employee: Restricted exclusively to their own profile and payslips. Requesting another colleague\'s payroll within the same company returns 403 Forbidden.');
   doc.addPage();
 
-  // --- SECTION 7 ---
   addHeader('7. File-by-File Code Tour & Request Flow');
   addParagraph('A typical transaction flows cleanly through well-defined layers without leaky abstractions:');
   addCodeBlock(
@@ -309,12 +296,11 @@ if (!employee) {
   addBullet('client/src/pages/RunPayroll.jsx: Attendance steppers, validation bar, and printable payslip.');
   doc.addPage();
 
-  // --- SECTION 8 & 9 ---
   addHeader('8. Bonus Natural Language Query Assistant');
   addParagraph('The POST /api/ask endpoint allows users to ask plain-English questions like "What is Ramesh\'s net salary for October?".');
-  addSubHeader('Zero Hallucination Architecture:');
+  addSubHeader('Query behavior:');
   addBullet('The query service never invents or estimates compensation figures.');
-  addBullet('Questions are resolved strictly by mapping to verified internal service functions (findEmployeeByName, getPayrollRecord).');
+  addBullet('Questions are handled by the company-scoped payroll query service (findEmployeeByName, getPayrollRecord).');
   addBullet('All query executions inherit the caller\'s verified req.user context: Company A cannot query Company B, and an employee asking about peers is refused with an access violation.');
   addBullet('Ambiguous names (e.g., multiple employees sharing a first name) prompt the user for clarification.');
 
@@ -326,39 +312,37 @@ if (!employee) {
   addBullet('Deductions: Modeled as a flat 10% statutory rate (representing PF and standard tax withholdings).');
 
   addSubHeader('Architectural Trade-offs:');
-  addBullet('Shared Database, Shared Schema: Multi-tenancy is enforced via a indexed companyId column. This provides optimal operational efficiency and cost, but requires rigorous query filtering.');
+  addBullet('Shared Database, Shared Schema: Records include a companyId field, and queries are filtered by that company.');
   addBullet('Stateless Bearer JWT: Highly responsive for single-page applications. For banking-grade security, pairing with refresh token rotation in httpOnly cookies would be ideal.');
   doc.addPage();
 
-  // --- SECTION 10 & 11 ---
   addHeader('10. Likely Interview Questions & Model Answers');
 
   addSubHeader('Q1: Why did you choose a shared-database tenant architecture instead of a separate database per company?');
-  addParagraph('Answer: "For a multi-tenant SaaS with hundreds of small-to-medium businesses, shared-database with a tenant column and compound indexes provides optimal connection pooling, faster schema migrations, and manageable infrastructure costs. We enforce hard logical boundaries through verified JWT claims, Mongoose compound indexes, and 404 error masking. For high-tier enterprise clients with strict compliance needs, we could transition to database-per-tenant without rewriting business logic."');
+  addParagraph('Answer: "For multiple companies, a shared database with a company identifier and compound indexes keeps queries scoped and migrations simple. A separate database per company is another option."');
 
   addSubHeader('Q2: How do you prevent Company A from seeing Company B\'s data via the LLM /ask endpoint?');
-  addParagraph('Answer: "The LLM is never given direct database credentials or a companyId parameter to pick from. Instead, the model invokes grounded tool functions that execute under the authenticated user\'s req.user session. The data access service automatically injects req.user.companyId into every MongoDB query, ensuring tenant isolation is maintained identically across both REST endpoints and natural language queries."');
+  addParagraph('Answer: "The query parser uses the authenticated user context. Its data access service scopes MongoDB queries to req.user.companyId, as the REST endpoints do."');
 
   addSubHeader('Q3: Why does requesting another company\'s employee ID return 404 instead of 403?');
-  addParagraph('Answer: "To prevent enumeration attacks. If an attacker guesses an ID and receives 403 Forbidden, they know that the resource exists within the system. Returning 404 Not Found maintains complete opacity, giving attackers zero information regarding other tenants\' internal IDs."');
+  addParagraph('Answer: "To prevent enumeration attacks. If an attacker guesses an ID and receives 403 Forbidden, they know that the resource exists within the system. Returning 404 Not Found avoids revealing whether another company\'s record exists."');
 
   addSubHeader('Q4: What would you improve in this project with more time?');
-  addParagraph('Answer: "I would add: 1) Daily biometric punch-clocking with geolocation, 2) Comprehensive Indian tax slab calculations (Section 115BAC), 3) Exporting payroll ledgers to CSV and automated bank transfer files (NEFT/RTGS), and 4) Refresh token rotation with Redis revocation."');
+  addParagraph('Answer: "I would add: 1) Daily biometric punch-clocking with geolocation, 2) Indian tax slab calculations (Section 115BAC), 3) Exporting payroll ledgers to CSV and automated bank transfer files (NEFT/RTGS), and 4) Refresh token rotation with Redis revocation."');
 
   doc.moveDown(1.5);
-  addHeader('11. Production Cloud Deployment Blueprint');
-  addParagraph('The application is production-ready for deployment to standard cloud platforms:');
+  addHeader('11. Deployment');
+  addParagraph('The app can be deployed to cloud platforms:');
   addBullet('Backend (Render / Railway): Deploy the /server directory. Set environment variables (MONGODB_URI, JWT_SECRET, CLIENT_URL, PORT). Start command: node src/server.js.');
   addBullet('Frontend (Vercel / Netlify): Deploy the /client directory. Set VITE_API_URL to the production backend URL. Build command: npm run build, Output directory: dist.');
   addBullet('Database: Hosted on MongoDB Atlas with IP whitelisting restricted to production server IPs.');
 
-  // Final page numbers on all pages
   const totalPages = doc.bufferedPageRange().count;
   for (let i = 0; i < totalPages; i++) {
     doc.switchToPage(i);
-    if (i > 0) { // Skip title page
+    if (i > 0) {
       doc.fillColor(MUTED).fontSize(8).font('Helvetica')
-        .text(`MobiusEMS Payroll System — Comprehensive Project Guide | Candidate: Aditya Bhalerao`, 50, doc.page.height - 35)
+        .text(`MobiusEMS Payroll System — Project Guide | Candidate: Aditya Bhalerao`, 50, doc.page.height - 35)
         .text(`Page ${i + 1} of ${totalPages}`, doc.page.width - 110, doc.page.height - 35, { align: 'right' });
     }
   }

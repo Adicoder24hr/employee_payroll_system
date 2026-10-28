@@ -24,7 +24,6 @@ export default function CompanySettings() {
   const [loading, setLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
 
-  // Month-specific override state
   const [targetMonth, setTargetMonth] = useState('2026-11');
   const [monthDays, setMonthDays] = useState(25);
   const [defaultDays, setDefaultDays] = useState(26);
@@ -71,7 +70,6 @@ export default function CompanySettings() {
 
   return (
     <div className="space-y-6 max-w-4xl">
-      {/* Header */}
       <div>
         <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-slate-50">
           Company Settings
@@ -88,7 +86,6 @@ export default function CompanySettings() {
         </div>
       ) : (
         <>
-          {/* Tenant Profile Overview */}
           <Card
             title="Tenant Profile & Cryptographic Scope"
             subtitle="Parameters tied to the authenticated JWT context"
@@ -122,8 +119,6 @@ export default function CompanySettings() {
               </div>
             </div>
           </Card>
-
-          {/* Working Days Configuration Form */}
           <Card
             title="Monthly Working Days Schedule"
             subtitle="Configure calendar working days per month (used for LOP rate calculation)"
@@ -167,8 +162,6 @@ export default function CompanySettings() {
                   </p>
                 </div>
               </div>
-
-              {/* Existing Configured Months */}
               <div>
                 <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">
                   Active Monthly Configurations

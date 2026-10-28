@@ -7,7 +7,6 @@ const { handleValidationErrors } = require('../middleware/validator');
 
 const router = express.Router();
 
-// Rate limiter for authentication endpoint (15 attempts per 15 mins per IP)
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 15,
@@ -19,7 +18,6 @@ const loginLimiter = rateLimit({
   legacyHeaders: false,
 });
 
-// Login route
 router.post(
   '/login',
   loginLimiter,
@@ -31,7 +29,6 @@ router.post(
   login
 );
 
-// Get current user profile
 router.get('/me', authenticate, getMe);
 
 module.exports = router;

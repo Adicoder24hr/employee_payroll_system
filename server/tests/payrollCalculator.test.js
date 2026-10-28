@@ -20,22 +20,13 @@ describe('Payroll Calculator Unit Tests', () => {
       expect(result.lopDays).toBe(0);
       expect(result.lopAmount).toBe(0);
       expect(result.grossSalary).toBe(60000.00);
-      expect(result.deduction).toBe(6000.00); // 10% of 60000
-      expect(result.netSalary).toBe(54000.00); // 60000 - 6000
-      expect(result.unmarkedDays).toBe(0);
+      expect(result.deduction).toBe(6000.00);expect(result.netSalary).toBe(54000.00);expect(result.unmarkedDays).toBe(0);
     });
   });
 
   describe('2. Mixed attendance with absences and half-days', () => {
     test('Calculates LOP days, per-day salary, LOP amount, gross, and net accurately', () => {
-      // Worked example:
-      // monthlySalary: 60,000, workingDays: 26 -> perDaySalary: 2307.69
-      // present: 22, absent: 2, halfDay: 2
       // lopDays = 2 + (0.5 * 2) = 3.0
-      // lopAmount = 2307.69 * 3 = 6923.07
-      // grossSalary = 60,000 - 6923.07 = 53076.93
-      // deduction (10%) = 5307.69
-      // netSalary = 53076.93 - 5307.69 = 47769.24
       const result = calculatePayroll({
         monthlySalary: 60000,
         workingDays: 26,
@@ -55,7 +46,6 @@ describe('Payroll Calculator Unit Tests', () => {
     });
 
     test('Unmarked days automatically count as absent days', () => {
-      // 26 working days, only 20 present days marked, 0 absent, 0 half days
       // 6 days unmarked -> treated as 6 absent days -> lopDays = 6.0
       const result = calculatePayroll({
         monthlySalary: 52000,
@@ -78,13 +68,7 @@ describe('Payroll Calculator Unit Tests', () => {
 
   describe('3. Half-days only and rounding behaviour', () => {
     test('3 half-days evaluate to 1.5 LOP days with exact rounding', () => {
-      // workingDays: 24, salary: 48000 -> perDay: 2000
-      // present: 21, halfDays: 3 (total = 24)
       // lopDays = 0 + (0.5 * 3) = 1.5
-      // lopAmount = 2000 * 1.5 = 3000
-      // grossSalary = 48000 - 3000 = 45000
-      // deduction (10%) = 4500
-      // netSalary = 40500
       const result = calculatePayroll({
         monthlySalary: 48000,
         workingDays: 24,
@@ -123,8 +107,7 @@ describe('Payroll Calculator Unit Tests', () => {
           workingDays: 26,
           presentDays: 20,
           absentDays: 5,
-          halfDays: 3, // Total 28 > 26
-        });
+          halfDays: 3,});
       }).toThrow(/cannot exceed company working days/);
     });
 
@@ -146,8 +129,7 @@ describe('Payroll Calculator Unit Tests', () => {
           monthlySalary: 50000,
           workingDays: 26,
           presentDays: 20,
-          month: '2026/10', // Invalid separator
-        });
+          month: '2026/10',});
       }).toThrow(/Invalid month format/);
 
       expect(() => {
@@ -155,8 +137,7 @@ describe('Payroll Calculator Unit Tests', () => {
           monthlySalary: 50000,
           workingDays: 26,
           presentDays: 20,
-          month: '2026-15', // Invalid month number
-        });
+          month: '2026-15',});
       }).toThrow(/Invalid month format/);
     });
 

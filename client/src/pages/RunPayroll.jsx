@@ -31,7 +31,6 @@ export default function RunPayroll() {
   const [companyConfig, setCompanyConfig] = useState(null);
   const [loadingConfig, setLoadingConfig] = useState(true);
 
-  // Attendance Stepper States
   const [presentDays, setPresentDays] = useState(22);
   const [absentDays, setAbsentDays] = useState(2);
   const [halfDays, setHalfDays] = useState(2);
@@ -39,7 +38,6 @@ export default function RunPayroll() {
   const [isCalculating, setIsCalculating] = useState(false);
   const [payrollResult, setPayrollResult] = useState(null);
 
-  // Load company config and employees
   useEffect(() => {
     async function loadInitialData() {
       setLoadingConfig(true);
@@ -55,7 +53,6 @@ export default function RunPayroll() {
 
         if (empRes.data.success && empRes.data.employees.length > 0) {
           setEmployees(empRes.data.employees);
-          // Default to Ramesh if available, otherwise first employee
           const ramesh = empRes.data.employees.find((e) => e.name.toLowerCase().includes('ramesh'));
           setSelectedEmployeeId(ramesh ? ramesh._id : empRes.data.employees[0]._id);
         }
@@ -68,7 +65,6 @@ export default function RunPayroll() {
     loadInitialData();
   }, []);
 
-  // Determine working days for the chosen month
   const workingDays = companyConfig?.workingDaysConfig?.[month] || companyConfig?.defaultWorkingDays || 26;
   const totalAccountedDays = Number(presentDays) + Number(absentDays) + Number(halfDays);
   const isOverflow = totalAccountedDays > workingDays;
@@ -76,7 +72,6 @@ export default function RunPayroll() {
 
   const selectedEmployee = employees.find((e) => e._id === selectedEmployeeId);
 
-  // Stepper helper
   const handleStep = (field, delta) => {
     if (field === 'present') {
       setPresentDays((prev) => Math.max(0, Math.min(workingDays, prev + delta)));
@@ -135,7 +130,6 @@ export default function RunPayroll() {
 
   return (
     <div className="space-y-6">
-      {/* Page Title */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-slate-50">
@@ -152,11 +146,9 @@ export default function RunPayroll() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Input Form Column (5 Cols) */}
         <div className="lg:col-span-5 space-y-6">
           <Card title="Attendance & Employee Selector">
             <div className="space-y-4">
-              {/* Employee Picker */}
               <div>
                 <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
                   Select Employee *
@@ -177,8 +169,6 @@ export default function RunPayroll() {
                   </select>
                 )}
               </div>
-
-              {/* Month Picker */}
               <div>
                 <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
                   Target Month *
@@ -193,14 +183,10 @@ export default function RunPayroll() {
                   Company working days for {month}: <strong className="text-slate-700 dark:text-slate-300">{workingDays} days</strong>
                 </p>
               </div>
-
-              {/* Attendance Steppers */}
               <div className="pt-2 border-t border-slate-100 dark:border-slate-800 space-y-3">
                 <span className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
                   Monthly Attendance Counts
                 </span>
-
-                {/* Present Stepper */}
                 <div className="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200/80 dark:border-slate-800">
                   <div>
                     <span className="text-sm font-semibold text-slate-800 dark:text-slate-200">
@@ -233,8 +219,6 @@ export default function RunPayroll() {
                     </button>
                   </div>
                 </div>
-
-                {/* Absent Stepper */}
                 <div className="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200/80 dark:border-slate-800">
                   <div>
                     <span className="text-sm font-semibold text-slate-800 dark:text-slate-200">
@@ -267,8 +251,6 @@ export default function RunPayroll() {
                     </button>
                   </div>
                 </div>
-
-                {/* Half-Day Stepper */}
                 <div className="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200/80 dark:border-slate-800">
                   <div>
                     <span className="text-sm font-semibold text-slate-800 dark:text-slate-200">
@@ -302,8 +284,6 @@ export default function RunPayroll() {
                   </div>
                 </div>
               </div>
-
-              {/* Validation Feedback Banner */}
               {isOverflow ? (
                 <div className="flex items-center space-x-2 p-3 rounded-xl bg-rose-50 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 border border-rose-200 text-xs">
                   <AlertTriangle className="w-4 h-4 flex-shrink-0" />
@@ -336,12 +316,9 @@ export default function RunPayroll() {
             </div>
           </Card>
         </div>
-
-        {/* Breakdown & Payslip Result Column (7 Cols) */}
         <div className="lg:col-span-7 space-y-6">
           {payrollResult ? (
             <div id="printable-payslip" className="space-y-6">
-              {/* Visual Breakdown Card */}
               <Card
                 title={`Payroll Breakdown — ${payrollResult.employeeName}`}
                 subtitle={`Month: ${payrollResult.month} • Computed via MobiusEMS Engine`}
@@ -357,7 +334,6 @@ export default function RunPayroll() {
                   </Button>
                 }
               >
-                {/* Visual Ratio Progress Bar */}
                 <div className="space-y-2 mb-6">
                   <div className="flex items-center justify-between text-xs font-semibold text-slate-600 dark:text-slate-400">
                     <span>Salary Composition</span>
@@ -395,8 +371,6 @@ export default function RunPayroll() {
                     </span>
                   </div>
                 </div>
-
-                {/* Metrics Breakdown Grid */}
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-4 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200/80 dark:border-slate-800 mb-6">
                   <div>
                     <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Working Days</span>
@@ -423,8 +397,6 @@ export default function RunPayroll() {
                     </p>
                   </div>
                 </div>
-
-                {/* Line Item Financial Ledger */}
                 <div className="divide-y divide-slate-100 dark:divide-slate-800 text-sm">
                   <div className="flex items-center justify-between py-3">
                     <span className="text-slate-600 dark:text-slate-400">Base Monthly CTC</span>

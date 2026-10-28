@@ -26,7 +26,6 @@ const companySchema = new mongoose.Schema(
       min: [0, 'Deduction percentage cannot be negative'],
       max: [100, 'Deduction percentage cannot exceed 100'],
     },
-    // Map of "YYYY-MM" -> working days count
     workingDaysConfig: {
       type: Map,
       of: Number,
@@ -37,11 +36,6 @@ const companySchema = new mongoose.Schema(
     timestamps: true,
   }
 );
-
-/**
- * Returns the effective working days for a given month ("YYYY-MM").
- * Falls back to defaultWorkingDays if not specifically configured.
- */
 companySchema.methods.getWorkingDaysForMonth = function (month) {
   if (this.workingDaysConfig && this.workingDaysConfig.has(month)) {
     return this.workingDaysConfig.get(month);

@@ -2,12 +2,6 @@ const Attendance = require('../models/Attendance');
 const User = require('../models/User');
 const Company = require('../models/Company');
 const { calculatePayroll, isValidMonth } = require('../utils/payrollCalculator');
-
-/**
- * Calculate and upsert monthly payroll for an employee.
- * POST /api/payroll/calculate
- * Restricted to: Admin
- */
 async function calculateAndSavePayroll(req, res, next) {
   try {
     const { employeeId, month, attendance } = req.body;
@@ -26,21 +20,18 @@ async function calculateAndSavePayroll(req, res, next) {
       });
     }
 
-    // 1. Verify employee exists strictly in the caller's company
     const employee = await User.findOne({
       _id: employeeId,
       companyId: req.user.companyId,
     });
 
     if (!employee) {
-      // Return 404 to avoid leaking existence of employee from another company
       return res.status(404).json({
         success: false,
         message: 'Employee not found in your company.',
       });
     }
 
-    // 2. Fetch company to resolve working days and deduction rate
     const company = await Company.findById(req.user.companyId);
     if (!company) {
       return res.status(404).json({
@@ -56,7 +47,6 @@ async function calculateAndSavePayroll(req, res, next) {
     const absentDays = Number(attendance.absent) || 0;
     const halfDays = Number(attendance.halfDay) || 0;
 
-    // 3. Execute pure payroll calculation
     let payrollResult;
     try {
       payrollResult = calculatePayroll({
@@ -75,7 +65,6 @@ async function calculateAndSavePayroll(req, res, next) {
       });
     }
 
-    // 4. Upsert attendance and payroll record
     const record = await Attendance.findOneAndUpdate(
       {
         companyId: req.user.companyId,
@@ -138,18 +127,10 @@ async function calculateAndSavePayroll(req, res, next) {
     next(error);
   }
 }
-
-/**
- * Get payroll record for a specific employee and month.
- * GET /api/payroll/:employeeId/:month
- * - Admin: can view anyone in their company
- * - Employee: can only view their own record
- */
 async function getPayrollByEmployeeAndMonth(req, res, next) {
   try {
     const { employeeId, month } = req.params;
 
-    // RBAC: If employee, prevent viewing someone else's data
     if (req.user.role === 'employee' && req.user.id !== employeeId) {
       return res.status(403).json({
         success: false,
@@ -164,7 +145,6 @@ async function getPayrollByEmployeeAndMonth(req, res, next) {
       });
     }
 
-    // Verify employee belongs to caller's company
     const employee = await User.findOne({
       _id: employeeId,
       companyId: req.user.companyId,
@@ -219,11 +199,6 @@ async function getPayrollByEmployeeAndMonth(req, res, next) {
     next(error);
   }
 }
-
-/**
- * Get all payroll records for the authenticated employee.
- * GET /api/payroll/me
- */
 async function getMyPayrollHistory(req, res, next) {
   try {
     const records = await Attendance.find({
@@ -260,12 +235,6 @@ async function getMyPayrollHistory(req, res, next) {
     next(error);
   }
 }
-
-/**
- * Get payroll summary metrics for dashboard (recent records, monthly totals).
- * GET /api/payroll/summary
- * Restricted to: Admin
- */
 async function getPayrollSummary(req, res, next) {
   try {
     const { month } = req.query;
@@ -283,7 +252,6 @@ async function getPayrollSummary(req, res, next) {
 
     const workingDays = company ? company.getWorkingDaysForMonth(targetMonth) : 26;
 
-    // Monthly payroll records
     const monthlyRecords = await Attendance.find({
       companyId: req.user.companyId,
       month: targetMonth,
@@ -299,7 +267,6 @@ async function getPayrollSummary(req, res, next) {
       totalDeductions += r.deduction || 0;
     });
 
-    // Recent 10 payroll records across months
     const recentRuns = await Attendance.find({
       companyId: req.user.companyId,
     })

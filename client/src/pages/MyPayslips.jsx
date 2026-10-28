@@ -58,7 +58,6 @@ export default function MyPayslips() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-slate-50">
@@ -78,8 +77,6 @@ export default function MyPayslips() {
           </Badge>
         </div>
       </div>
-
-      {/* Overview Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <Card>
           <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
@@ -111,8 +108,6 @@ export default function MyPayslips() {
           <p className="text-xs text-slate-400 mt-1">Tenant Code: {user?.company?.code}</p>
         </Card>
       </div>
-
-      {/* Historical Records List */}
       <Card
         title="Disbursement History"
         subtitle="Click any month to inspect line-item deductions or generate a printable payslip"
@@ -185,8 +180,6 @@ export default function MyPayslips() {
           </div>
         )}
       </Card>
-
-      {/* Detailed Printable Payslip Modal */}
       <Modal
         isOpen={Boolean(selectedPayslip)}
         onClose={() => setSelectedPayslip(null)}
@@ -196,7 +189,6 @@ export default function MyPayslips() {
       >
         {selectedPayslip && (
           <div id="printable-payslip" className="space-y-6">
-            {/* Payslip Header Card */}
             <div className="flex items-center justify-between p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800">
               <div className="flex items-center space-x-3">
                 <div className="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center text-white font-bold">
@@ -213,8 +205,6 @@ export default function MyPayslips() {
                 {selectedPayslip.month}
               </Badge>
             </div>
-
-            {/* Employee Credentials */}
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs p-4 rounded-xl border border-slate-200 dark:border-slate-800">
               <div>
                 <span className="text-slate-400 font-medium">Employee Name:</span>
@@ -241,8 +231,6 @@ export default function MyPayslips() {
                 <p className="font-mono font-bold text-slate-800 dark:text-slate-200 mt-0.5">₹{selectedPayslip.perDaySalary}</p>
               </div>
             </div>
-
-            {/* Financial Ledger Breakdown */}
             <div className="border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden divide-y divide-slate-100 dark:divide-slate-800 text-sm">
               <div className="flex items-center justify-between p-3">
                 <span className="text-slate-600 dark:text-slate-400">Base Monthly CTC</span>
@@ -279,8 +267,6 @@ export default function MyPayslips() {
                 </span>
               </div>
             </div>
-
-            {/* Modal Actions */}
             <div className="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-slate-800 no-print">
               <span className="text-[11px] text-slate-400">
                 Generated via verified cryptographic tenant context.

@@ -23,7 +23,7 @@ const userSchema = new mongoose.Schema(
     passwordHash: {
       type: String,
       required: [true, 'Password hash is required'],
-      select: false, // Do not return by default in queries
+      select: false,
     },
     role: {
       type: String,
@@ -62,15 +62,12 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-// Compound index to guarantee uniqueness of email PER company
 userSchema.index({ companyId: 1, email: 1 }, { unique: true });
 
-// Password comparison method
 userSchema.methods.comparePassword = async function (candidatePassword) {
   return bcrypt.compare(candidatePassword, this.passwordHash);
 };
 
-// Static helper to hash passwords
 userSchema.statics.hashPassword = async function (plainPassword) {
   const salt = await bcrypt.genSalt(10);
   return bcrypt.hash(plainPassword, salt);

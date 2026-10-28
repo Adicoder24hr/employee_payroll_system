@@ -1,14 +1,9 @@
 const User = require('../models/User');
-
-/**
- * List employees belonging exclusively to the caller's company.
- * GET /api/employees
- */
 async function listEmployees(req, res, next) {
   try {
     const { search, role } = req.query;
 
-    // Strict tenant isolation: companyId is always locked to req.user.companyId
+    // Scope employee queries to the company in the authenticated user context.
     const filter = {
       companyId: req.user.companyId,
     };
@@ -39,11 +34,6 @@ async function listEmployees(req, res, next) {
     next(error);
   }
 }
-
-/**
- * Create a new employee within the caller's company.
- * POST /api/employees
- */
 async function createEmployee(req, res, next) {
   try {
     const { name, email, password, role = 'employee', designation, monthlySalary } = req.body;
@@ -65,7 +55,6 @@ async function createEmployee(req, res, next) {
 
     const normalizedEmail = email.toLowerCase().trim();
 
-    // Check if email already exists in this company
     const existing = await User.findOne({
       companyId: req.user.companyId,
       email: normalizedEmail,
@@ -78,10 +67,8 @@ async function createEmployee(req, res, next) {
       });
     }
 
-    // Hash password
     const passwordHash = await User.hashPassword(password);
 
-    // Create user bound strictly to req.user.companyId
     const newEmployee = await User.create({
       companyId: req.user.companyId,
       name: name.trim(),
@@ -110,23 +97,17 @@ async function createEmployee(req, res, next) {
     next(error);
   }
 }
-
-/**
- * Get employee details by ID.
- * Returns 404 if employee does not exist or belongs to another tenant company.
- * GET /api/employees/:id
- */
 async function getEmployeeById(req, res, next) {
   try {
     const { id } = req.params;
 
-    // Tenant isolation: querying by _id AND caller's companyId
+    // Query by both ID and company so another company's records are not exposed.
     const employee = await User.findOne({
       _id: id,
       companyId: req.user.companyId,
     }).select('-passwordHash');
 
-    // Return 404 rather than 403 to prevent entity existence leakage
+    // Return 404 so the response does not reveal whether another company's record exists.
     if (!employee) {
       return res.status(404).json({
         success: false,

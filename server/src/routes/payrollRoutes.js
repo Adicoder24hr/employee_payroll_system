@@ -13,7 +13,6 @@ const router = express.Router();
 
 router.use(authenticate);
 
-// Admin-only: Calculate and upsert monthly payroll
 router.post(
   '/calculate',
   authorizeRoles('admin'),
@@ -36,13 +35,10 @@ router.post(
   calculateAndSavePayroll
 );
 
-// Admin-only: Summary metrics and dashboard aggregation
 router.get('/summary', authorizeRoles('admin'), getPayrollSummary);
 
-// Authenticated: Employee view their own history
 router.get('/me', getMyPayrollHistory);
 
-// Authenticated: Get payroll for specific employee & month (Admin or self)
 router.get('/:employeeId/:month', getPayrollByEmployeeAndMonth);
 
 module.exports = router;

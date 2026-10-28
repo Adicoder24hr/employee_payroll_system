@@ -12,10 +12,8 @@ const router = express.Router();
 
 router.use(authenticate);
 
-// List employees (admin only)
 router.get('/', authorizeRoles('admin'), listEmployees);
 
-// Create employee (admin only)
 router.post(
   '/',
   authorizeRoles('admin'),
@@ -37,7 +35,6 @@ router.post(
   createEmployee
 );
 
-// Get employee by ID
 router.get('/:id', getEmployeeById);
 
 module.exports = router;

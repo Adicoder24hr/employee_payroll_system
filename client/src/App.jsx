@@ -29,10 +29,7 @@ export default function App() {
         <AuthProvider>
           <BrowserRouter>
             <Routes>
-              {/* Public Authentication Route */}
               <Route path="/login" element={<Login />} />
-
-              {/* Protected Authenticated App Routes */}
               <Route
                 element={
                   <ProtectedRoute>
@@ -40,10 +37,7 @@ export default function App() {
                   </ProtectedRoute>
                 }
               >
-                {/* Dynamic Root Route */}
                 <Route path="/" element={<RootRedirect />} />
-
-                {/* Admin Only Routes */}
                 <Route
                   path="/employees"
                   element={
@@ -68,8 +62,6 @@ export default function App() {
                     </ProtectedRoute>
                   }
                 />
-
-                {/* Employee / Self-Service Route */}
                 <Route
                   path="/my-payslips"
                   element={
@@ -78,8 +70,6 @@ export default function App() {
                     </ProtectedRoute>
                   }
                 />
-
-                {/* Bonus AI Query Assistant (All roles) */}
                 <Route
                   path="/ask"
                   element={
@@ -89,8 +79,6 @@ export default function App() {
                   }
                 />
               </Route>
-
-              {/* Catch-All 404 Route */}
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>

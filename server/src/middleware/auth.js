@@ -1,10 +1,5 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
-
-/**
- * Verifies JWT from Authorization: Bearer <token> header.
- * Attaches the authenticated user and companyId to req.user.
- */
 async function authenticate(req, res, next) {
   try {
     const authHeader = req.headers.authorization;
@@ -37,7 +32,6 @@ async function authenticate(req, res, next) {
       });
     }
 
-    // Load active user from database to ensure account was not deleted/deactivated
     const user = await User.findById(decoded.userId).select('-passwordHash');
 
     if (!user || !user.isActive) {
@@ -47,8 +41,7 @@ async function authenticate(req, res, next) {
       });
     }
 
-    // Attach user information.
-    // CRITICAL: companyId is set strictly from the database / verified token claim!
+    // Use the verified company claim so callers cannot choose another company.
     req.user = {
       _id: user._id,
       id: user._id.toString(),
@@ -66,12 +59,6 @@ async function authenticate(req, res, next) {
     return next(error);
   }
 }
-
-/**
- * Role-Based Access Control middleware.
- * Restricts access to specified roles (e.g. 'admin').
- * @param  {...string} roles
- */
 function authorizeRoles(...roles) {
   return (req, res, next) => {
     if (!req.user || !roles.includes(req.user.role)) {

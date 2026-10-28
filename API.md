@@ -343,10 +343,10 @@ Retrieves all historical payroll records for the authenticated employee.
 
 ---
 
-## 5. Natural Language Query (Bonus Endpoint)
+## 5. Payroll Query Endpoint
 
-### 5.1 Ask Payroll AI
-Answers natural-language payroll queries using tool calling against verified database services.
+### 5.1 Ask a Payroll Question
+Answers supported payroll questions using company-scoped payroll records.
 
 - **Method:** `POST`
 - **Path:** `/ask`
@@ -377,6 +377,5 @@ Answers natural-language payroll queries using tool calling against verified dat
 ```
 
 #### Error Responses
-- `400 Bad Request`: Question string is empty.
-- `403 Forbidden`: Tool execution attempted cross-employee access forbidden to caller role.
-- `503 Service Unavailable`: LLM API key not configured or upstream API failure.
+
+- `400 Bad Request`: The question is missing or empty.

@@ -6,7 +6,6 @@ const PORT = process.env.PORT || 5000;
 
 async function startServer() {
   try {
-    // Attempt database connection
     if (process.env.MONGODB_URI) {
       await connectDB();
     } else {
